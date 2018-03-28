@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<local:BasePage
+    x:Class="IotApp.Pages.OtherPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:IotApp.Controls;assembly=IotApp"
+    xmlns:converters="clr-namespace:IotApp.Converters;assembly=IotApp"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:local="clr-namespace:IotApp.Pages;assembly=IotApp"
+    Title="Actions"
+    ios:Page.UseSafeArea="true"
+    Icon="other">
+    <local:BasePage.Content>
+
+        <StackLayout Margin="20,20,20,0" Spacing="20">
+
+            <StackLayout.Resources>
+                <ResourceDictionary>
+                    <converters:BoolToStatusIconConverter x:Key="BoolToStatusIconConverter" />
+                    <converters:BoolToStatusColorConverter x:Key="BoolToStatusColorConverter" />
+                    <converters:BoolToSwitchIconConverter x:Key="BoolToSwitchIconConverter" />
+                </ResourceDictionary>
+            </StackLayout.Resources>
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="26"
+                HorizontalOptions="Center"
+                Text="Actions" />
+
+            <TableView BackgroundColor="White" Intent="Settings">
+                <TableRoot>
+                    <TableSection Title="Manual Alarm Overrides">
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label
+                                    Margin="15,0,0,0"
+                                    Text="Alarm Strobe"
+                                    VerticalOptions="Center" />
+                                <ffimageloadingsvg:SvgCachedImage
+                                    Margin="0,0,15,0"
+                                    HorizontalOptions="EndAndExpand"
+                                    Source="{Binding DeviceTwin.AlarmStrobe, Converter={StaticResource BoolToSwitchIconConverter}}"
+                                    VerticalOptions="Center"
+                                    WidthRequest="40">
+                                    <ffimageloading:CachedImage.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding OnAlarmStrobeTapped}" />
+                                    </ffimageloading:CachedImage.GestureRecognizers>
+                                </ffimageloadingsvg:SvgCachedImage>
+                            </StackLayout>
+                        </ViewCell>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label
+                                    Margin="15,0,0,0"
+                                    Text="Alarm Siren"
+                                    VerticalOptions="Center" />
+                                <ffimageloadingsvg:SvgCachedImage
+                                    Margin="0,0,15,0"
+                                    HorizontalOptions="EndAndExpand"
+                                    Source="{Binding DeviceTwin.AlarmSiren, Converter={StaticResource BoolToSwitchIconConverter}}"
+                                    VerticalOptions="Center"
+                                    WidthRequest="40">
+                                    <ffimageloading:CachedImage.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding OnAlarmSirenTapped}" />
+                                    </ffimageloading:CachedImage.GestureRecognizers>
+                                </ffimageloadingsvg:SvgCachedImage>
+                            </StackLayout>
+                        </ViewCell>
+                    </TableSection>
+                    <TableSection Title="Other Actions">
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label
+                                    Margin="15,0,0,0"
+                                    Text="Appliance Connected to Azure"
+                                    VerticalOptions="Center" />
+                                <controls:TintedSvgCachedImage
+                                    Margin="0,0,20,0"
+                                    HeightRequest="30"
+                                    HorizontalOptions="EndAndExpand"
+                                    Source="{Binding DeviceTwin.ApplianceConnected, Converter={StaticResource BoolToStatusIconConverter}}"
+                                    TintColor="{Binding DeviceTwin.ApplianceConnected, Converter={StaticResource BoolToStatusColorConverter}}"
+                                    VerticalOptions="Center"
+                                    WidthRequest="30" />
+                            </StackLayout>
+                        </ViewCell>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label
+                                    Margin="15,0,0,0"
+                                    Text="Wake PC"
+                                    VerticalOptions="Center" />
+                                <ffimageloadingsvg:SvgCachedImage
+                                    Margin="0,0,15,0"
+                                    HorizontalOptions="EndAndExpand"
+                                    Source="{Binding WakePcStatus, Converter={StaticResource BoolToSwitchIconConverter}}"
+                                    VerticalOptions="Center"
+                                    WidthRequest="40">
+                                    <ffimageloading:CachedImage.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding OnWakePcTapped}" />
+                                    </ffimageloading:CachedImage.GestureRecognizers>
+                                </ffimageloadingsvg:SvgCachedImage>
+                            </StackLayout>
+                        </ViewCell>
+                    </TableSection>
+                </TableRoot>
+            </TableView>
+
+        </StackLayout>
+    </local:BasePage.Content>
+</local:BasePage>

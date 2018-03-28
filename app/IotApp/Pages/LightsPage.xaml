@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<local:BasePage
+    x:Class="IotApp.Pages.LightsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:IotApp.Converters;assembly=IotApp"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:local="clr-namespace:IotApp.Pages;assembly=IotApp"
+    Title="Lights"
+    ios:Page.UseSafeArea="true"
+    Icon="lights">
+    <local:BasePage.Content>
+
+        <StackLayout Margin="20,20,20,0" Spacing="20">
+
+            <StackLayout.Resources>
+                <ResourceDictionary>
+                    <converters:BoolToSwitchIconConverter x:Key="BoolToSwitchIconConverter" />
+                </ResourceDictionary>
+            </StackLayout.Resources>
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="26"
+                HorizontalOptions="Center"
+                Text="Outdoor Lights" />
+
+            <TableView BackgroundColor="White" Intent="Settings">
+                <TableRoot>
+                    <TableSection Title="Lights">
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label
+                                    Margin="15,0,0,0"
+                                    Text="Garden Lights"
+                                    VerticalOptions="Center" />
+                                <ffimageloadingsvg:SvgCachedImage
+                                    Margin="0,0,15,0"
+                                    HorizontalOptions="EndAndExpand"
+                                    Source="{Binding DeviceTwin.LightsGarden, Converter={StaticResource BoolToSwitchIconConverter}}"
+                                    VerticalOptions="Center"
+                                    WidthRequest="40">
+                                    <ffimageloading:CachedImage.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding LightsGardenTapped}" />
+                                    </ffimageloading:CachedImage.GestureRecognizers>
+                                </ffimageloadingsvg:SvgCachedImage>
+                            </StackLayout>
+                        </ViewCell>
+                    </TableSection>
+                </TableRoot>
+            </TableView>
+
+        </StackLayout>
+    </local:BasePage.Content>
+</local:BasePage>

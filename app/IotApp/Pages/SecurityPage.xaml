@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<local:BasePage
+    x:Class="IotApp.Pages.SecurityPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:IotApp.Controls;assembly=IotApp"
+    xmlns:converters="clr-namespace:IotApp.Converters;assembly=IotApp"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:local="clr-namespace:IotApp.Pages;assembly=IotApp"
+    Title="Security"
+    ios:Page.UseSafeArea="true"
+    Icon="security">
+    <local:BasePage.Content>
+
+        <StackLayout Margin="20,20,20,0" Spacing="15">
+
+            <StackLayout.Resources>
+                <ResourceDictionary>
+                    <converters:BoolToStatusIconConverter x:Key="BoolToStatusIconConverter" />
+                    <converters:BoolToStatus2ColorConverter x:Key="BoolToStatus2ColorConverter" />
+                    <converters:ArmedStateTextConverter x:Key="ArmedStateTextConverter" />
+                    <converters:ArmedStateIconConverter x:Key="ArmedStateIconConverter" />
+                    <converters:ArmedStateIconColorConverter x:Key="ArmedStateIconColorConverter" />
+                    <converters:ArmedStateDescriptionConverter x:Key="ArmedStateDescriptionConverter" />
+                </ResourceDictionary>
+            </StackLayout.Resources>
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="26"
+                HorizontalOptions="Center"
+                Text="IoT App" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <controls:TintedSvgCachedImage
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    HeightRequest="80"
+                    HorizontalOptions="Center"
+                    Source="{Binding Settings.ArmedState, Converter={StaticResource ArmedStateIconConverter}}"
+                    TintColor="{Binding Settings.ArmedState, Converter={StaticResource ArmedStateIconColorConverter}}"
+                    VerticalOptions="Center"
+                    WidthRequest="80" />
+
+                <ffimageloadingsvg:SvgCachedImage
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    HeightRequest="30"
+                    HorizontalOptions="Center"
+                    Source="005-shield-2.svg"
+                    WidthRequest="30">
+                    <ffimageloading:CachedImage.Transformations>
+                        <fftransformations:TintTransformation EnableSolidColor="true" HexColor="#c2c2c2" />
+                    </ffimageloading:CachedImage.Transformations>
+                </ffimageloadingsvg:SvgCachedImage>
+
+                <ffimageloadingsvg:SvgCachedImage
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HeightRequest="30"
+                    HorizontalOptions="Center"
+                    Source="004-shield-3.svg"
+                    WidthRequest="30">
+                    <ffimageloading:CachedImage.Transformations>
+                        <fftransformations:TintTransformation EnableSolidColor="true" HexColor="#c2c2c2" />
+                    </ffimageloading:CachedImage.Transformations>
+                </ffimageloadingsvg:SvgCachedImage>
+
+                <ffimageloadingsvg:SvgCachedImage
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    HeightRequest="30"
+                    HorizontalOptions="Center"
+                    Source="003-shield-4.svg"
+                    WidthRequest="30">
+                    <ffimageloading:CachedImage.Transformations>
+                        <fftransformations:TintTransformation EnableSolidColor="true" HexColor="#c2c2c2" />
+                    </ffimageloading:CachedImage.Transformations>
+                </ffimageloadingsvg:SvgCachedImage>
+
+                <StackLayout
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Grid.Column="3"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="28"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Settings.ArmedState, Converter={StaticResource ArmedStateTextConverter}}"
+                        TextColor="{Binding Settings.ArmedState, Converter={StaticResource ArmedStateIconColorConverter}}" />
+                    <Label
+                        FontSize="18"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Settings.ArmedState, Converter={StaticResource ArmedStateDescriptionConverter}}" />
+                </StackLayout>
+
+            </Grid>
+
+            <BoxView BackgroundColor="#c2c2c2" HeightRequest="1" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="25" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Image
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    HeightRequest="25"
+                    Source="estimotes.png"
+                    WidthRequest="25" />
+                <controls:TintedSvgCachedImage
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    HeightRequest="25"
+                    HorizontalOptions="Center"
+                    Source="{Binding Settings.OccupantState.AtHome, Converter={StaticResource BoolToStatusIconConverter}}"
+                    TintColor="{Binding Settings.OccupantState.AtHome, Converter={StaticResource BoolToStatus2ColorConverter}}"
+                    VerticalOptions="Center"
+                    WidthRequest="25" />
+                <controls:TintedSvgCachedImage
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    HeightRequest="25"
+                    HorizontalOptions="Center"
+                    Source="{Binding Settings.OccupantState.IsSleeping, Converter={StaticResource BoolToStatusIconConverter}}"
+                    TintColor="{Binding Settings.OccupantState.IsSleeping, Converter={StaticResource BoolToStatus2ColorConverter}}"
+                    VerticalOptions="Center"
+                    WidthRequest="25" />
+
+                <BoxView
+                    Grid.Row="0"
+                    Grid.RowSpan="6"
+                    Grid.Column="1"
+                    BackgroundColor="#c2c2c2"
+                    WidthRequest="1" />
+
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    HorizontalOptions="Center"
+                    Text="Occupant"
+                    TextColor="Black" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    FontSize="14"
+                    HorizontalOptions="End"
+                    Text="At Home"
+                    TextColor="Black"
+                    VerticalOptions="Center" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    FontSize="14"
+                    HorizontalOptions="End"
+                    Text="Is Sleeping"
+                    TextColor="Black"
+                    VerticalOptions="Center" />
+
+                <controls:TintedSvgCachedImage
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    HeightRequest="25"
+                    HorizontalOptions="Center"
+                    Source="{Binding DeviceTwin.Occupant.AtHome, Converter={StaticResource BoolToStatusIconConverter}}"
+                    TintColor="{Binding DeviceTwin.Occupant.AtHome, Converter={StaticResource BoolToStatus2ColorConverter}}"
+                    VerticalOptions="Center"
+                    WidthRequest="25" />
+                <controls:TintedSvgCachedImage
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    HeightRequest="25"
+                    HorizontalOptions="Center"
+                    Source="{Binding DeviceTwin.Occupant.IsSleeping, Converter={StaticResource BoolToStatusIconConverter}}"
+                    TintColor="{Binding DeviceTwin.Occupant.IsSleeping, Converter={StaticResource BoolToStatus2ColorConverter}}"
+                    VerticalOptions="Center"
+                    WidthRequest="25" />
+            </Grid>
+
+        </StackLayout>
+
+    </local:BasePage.Content>
+</local:BasePage>

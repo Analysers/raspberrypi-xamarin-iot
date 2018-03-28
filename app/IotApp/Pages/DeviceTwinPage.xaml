@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<local:BasePage
+    x:Class="IotApp.Pages.DeviceTwinPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:local="clr-namespace:IotApp.Pages;assembly=IotApp"
+    Title="Device Twin"
+    Padding="10,20,10,10"
+    ios:Page.UseSafeArea="true"
+    Icon="devicetwin">
+    <local:BasePage.Content>
+        <StackLayout>
+            <ScrollView Padding="10,0,10,0">
+                <Label
+                    FontSize="14"
+                    HorizontalOptions="Start"
+                    Text="{Binding IoTHubOutput}"
+                    VerticalOptions="Start" />
+            </ScrollView>
+            <Button Command="{Binding OnRefreshTapped}" Text="Refresh" />
+        </StackLayout>
+    </local:BasePage.Content>
+</local:BasePage>
