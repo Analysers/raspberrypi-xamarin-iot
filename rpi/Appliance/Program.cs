@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Appliance.Azure;
-using Appliance.Commands;
+﻿using Appliance.Azure;
 using Appliance.Components;
 using Appliance.Domain;
 using Appliance.Services;
@@ -9,6 +6,9 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.Runtime.Loader;
+using System.Threading.Tasks;
 using static System.Threading.Thread;
 using static System.Threading.Timeout;
 
@@ -18,6 +18,7 @@ namespace Appliance
     {
         private static IServiceProvider _serviceProvider;
         private static IMediator _mediator;
+        private static IAzureIoTHub _azureIoTHub;
 
         private static async Task Main(string[] args)
         {
@@ -26,7 +27,20 @@ namespace Appliance
             _serviceProvider = ServiceCollectionFactory.CreateServiceProvider();
             _mediator = _serviceProvider.GetService<IMediator>();
 
+            AppDomain.CurrentDomain.ProcessExit += (s, ev) =>
+            {
+                Log.Information("Process exit...");
+            };
+
+            AssemblyLoadContext.Default.Unloading += context =>
+            {
+                _azureIoTHub.TryClose();
+                Log.Information("Unloading...");
+            };
+
             await InitializeAppliance();
+
+            Log.Information("Home Security System started");
 
             // Sleep indefinitely
             Sleep(Infinite);
@@ -38,8 +52,8 @@ namespace Appliance
             Config.Initialize(_serviceProvider.GetService<IArmedState>());
 
             // Initialize Azure IoT Hub
-            var azureIoTHub = _serviceProvider.GetService<IAzureIoTHub>();
-            await azureIoTHub.Initialize();
+            _azureIoTHub = _serviceProvider.GetService<IAzureIoTHub>();
+            await _azureIoTHub.Initialize();
 
             // Initialize Sensors
             var sensorController = _serviceProvider.GetService<ISensorBoard>();
@@ -65,7 +79,7 @@ namespace Appliance
                 .MinimumLevel.Verbose()
                 .MinimumLevel.Override("System", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                .WriteTo.Console()
+                .WriteTo.Console(outputTemplate: "[{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
         }
     }

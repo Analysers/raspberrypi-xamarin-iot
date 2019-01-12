@@ -1,12 +1,12 @@
-#addin "Cake.Putty"
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.4.0
+#addin nuget:?package=Cake.Putty&version=1.4.0
+#addin nuget:?package=Cake.Figlet&version=1.2.0
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var framework = Argument("framework", "netcoreapp2.0");
+var framework = Argument("framework", "netcoreapp2.2");
 var runtime = Argument("runtime", "linux-arm");
 var destinationIp = Argument("destinationPi", "192.168.1.1");
 var publishDirectory = Argument("publishDirectory", @"./publish");

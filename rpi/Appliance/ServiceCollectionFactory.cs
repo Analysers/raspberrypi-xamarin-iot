@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Easy.Common;
-using Easy.Common.Extensions;
-using Easy.Common.Interfaces;
-using Appliance.Azure;
+﻿using Appliance.Azure;
 using Appliance.Components;
 using Appliance.Controllers;
 using Appliance.Domain;
 using Appliance.Events;
 using Appliance.Services;
+using Easy.Common;
+using Easy.Common.Extensions;
+using Easy.Common.Interfaces;
 using MediatR;
-using Microsoft.Azure.Devices.Client;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 
 namespace Appliance
 {
@@ -43,7 +41,6 @@ namespace Appliance
             serviceProvider
                 //.AddSingleton<IAzureIoTHub, DebugAzureIoTHub>()
                 .AddSingleton<IAzureIoTHub, AzureIoTHub>()
-                .AddSingleton(DeviceClient.CreateFromConnectionString(Config.DeviceConnectionString, TransportType.Mqtt))
                 .AddSingleton<ILedBoard, DebugLedBoard>()
                 .AddSingleton<IRelayBoard, DebugRelayBoard>()
                 .AddSingleton<ISensorBoard, DebugSensorBoard>()
@@ -51,7 +48,6 @@ namespace Appliance
 #else
             serviceProvider
                 .AddSingleton<IAzureIoTHub, AzureIoTHub>()
-                .AddSingleton(DeviceClient.CreateFromConnectionString(Config.DeviceConnectionString, TransportType.Mqtt))
                 .AddSingleton<ILedBoard, LedBoard>()
                 .AddSingleton<IRelayBoard, RelayBoard>()
                 .AddSingleton<ISensorBoard, SensorBoard>()

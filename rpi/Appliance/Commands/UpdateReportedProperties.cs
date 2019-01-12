@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using Appliance.Azure;
+using MediatR;
 using Microsoft.Azure.Devices.Shared;
+using System.Threading;
 using System.Threading.Tasks;
-using Appliance.Azure;
-using Appliance.Helpers;
 
 namespace Appliance.Commands
 {
@@ -15,7 +15,7 @@ namespace Appliance.Commands
             _azureIoTHub = azureIoTHub;
         }
 
-        protected override Task HandleCore(UpdateReportedPropertiesCommand request)
+        protected override Task Handle(UpdateReportedPropertiesCommand request, CancellationToken cancellationToken)
         {
             return _azureIoTHub.UpdateReportedProperties(request.ReportedProperties);
         }

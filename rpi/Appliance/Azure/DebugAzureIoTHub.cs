@@ -1,12 +1,17 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Azure.Devices.Shared;
+﻿using Microsoft.Azure.Devices.Shared;
 using Serilog;
+using System.Threading.Tasks;
 
 namespace Appliance.Azure
 {
     public class DebugAzureIoTHub : IAzureIoTHub
     {
         public Task Initialize()
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task TryClose()
         {
             return Task.CompletedTask;
         }

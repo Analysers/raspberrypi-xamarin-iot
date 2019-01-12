@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using Appliance.Controllers;
+﻿using Appliance.Controllers;
 using Appliance.Models;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Appliance.Commands
 {
-    public class ToggleAlarmStrobeHandler : AsyncRequestHandler<ToggleAlarmStrobeCommand, StateResponse>
+    public class ToggleAlarmStrobeHandler : IRequestHandler<ToggleAlarmStrobeCommand, StateResponse>
     {
         private readonly IRelaysController _relaysController;
 
@@ -14,7 +15,7 @@ namespace Appliance.Commands
             _relaysController = relaysController;
         }
 
-        protected override Task<StateResponse> HandleCore(ToggleAlarmStrobeCommand request)
+        public Task<StateResponse> Handle(ToggleAlarmStrobeCommand request, CancellationToken token)
         {
             return Task.FromResult(new StateResponse(_relaysController.AlarmStrobeToggle()));
         }

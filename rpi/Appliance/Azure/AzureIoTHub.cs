@@ -1,15 +1,15 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-using Appliance.Commands;
+﻿using Appliance.Commands;
 using Appliance.Domain;
-using Appliance.Helpers;
 using Appliance.Notifications;
+using Easy.Common.Extensions;
 using MediatR;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Shared;
 using Newtonsoft.Json;
 using Serilog;
+using System;
+using System.Text;
+using System.Threading.Tasks;
 using JsonSerializer = Utf8Json.JsonSerializer;
 
 namespace Appliance.Azure
@@ -18,22 +18,59 @@ namespace Appliance.Azure
     {
         private readonly IMediator _mediator;
         private readonly IAlarmState _alarmState;
-        private readonly DeviceClient _deviceClient;
+        private static DeviceClient _deviceClient;
 
-        public AzureIoTHub(IMediator mediator, IAlarmState alarmState, DeviceClient deviceClient)
+        public AzureIoTHub(IMediator mediator, IAlarmState alarmState)
         {
             _mediator = mediator;
             _alarmState = alarmState;
-            _deviceClient = deviceClient;
         }
 
         public async Task Initialize()
         {
-            await RegisterTwinUpdateAsync();
-            var tc = await GetDesiredProperties();
-            await UpdateDeviceTwin(tc);
-            await RegisterDirectMethodHandlers();
-            // Receive Cloud to Device messages init can go here if required
+            while (true)
+            {
+                try
+                {
+                    Log.Information("Azure IoT Hub trying to initialize");
+                    _deviceClient = null;
+                    _deviceClient = DeviceClient.CreateFromConnectionString(Config.DeviceConnectionString, TransportType.Mqtt);
+                    _deviceClient.SetConnectionStatusChangesHandler(async (s, r) => await ConnectionStatusChanged(s, r));
+                    await _deviceClient.OpenAsync();
+
+                    await RegisterTwinUpdateAsync();
+                    var tc = await GetDesiredProperties();
+                    await UpdateDeviceTwin(tc);
+                    await RegisterDirectMethodHandlers();
+                    // Receive Cloud to Device messages init can go here if required
+
+                    Log.Information("Azure IoT Hub initialized");
+
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Azure IoT Hub trying to connect exception: {@ex}", ex);
+                }
+
+                Log.Error("Azure IoT Hub Initialize delaying 15 seconds before retrying.");
+                await Task.Delay(15.Seconds());
+            }
+        }
+
+        public async Task TryClose()
+        {
+            try
+            {
+                Log.Information("Azure IoT Hub trying to close");
+                _deviceClient.SetConnectionStatusChangesHandler(null);
+                await _deviceClient.CloseAsync();
+                _deviceClient = null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Azure IoT Hub Exception on TryClose. {@ex}", ex);
+            }
         }
 
         private async Task RegisterDirectMethodHandlers()
@@ -200,6 +237,55 @@ namespace Appliance.Azure
             catch (Exception ex)
             {
                 Log.Error($"Error on UpdateState '{occupantState}'", ex);
+            }
+        }
+
+        private async Task ConnectionStatusChanged(ConnectionStatus status, ConnectionStatusChangeReason reason)
+        {
+            // https://github.com/Azure/azure-iot-sdk-csharp/pull/741
+            //Log.Information("Azure IoT Hub connection status Changed Status: {status} Reason: {reason}", status, reason);
+
+            //if (status == ConnectionStatus.Connected && reason == ConnectionStatusChangeReason.Connection_Ok)
+            //{
+            //    Log.Information("Client connected (initially and after a successful retry).");
+            //}
+
+            if (status == ConnectionStatus.Disabled && reason == ConnectionStatusChangeReason.Client_Close)
+            {
+                Log.Information("Application disposed the client.");
+                await TryClose();
+                await Initialize();
+            }
+
+            if (status == ConnectionStatus.Disconnected && reason == ConnectionStatusChangeReason.Communication_Error)
+            {
+                Log.Information("If no callback subscriptions exist, the client will not automatically connect. A future operation will attempt to reconnect the client.");
+                await TryClose();
+                await Initialize();
+            }
+
+            if (status == ConnectionStatus.Disconnected_Retrying && reason == ConnectionStatusChangeReason.Communication_Error)
+            {
+                Log.Information("If any callback subscriptions exist (methods, twin, events) and connectivity is lost, the client will try to reconnect.");
+            }
+
+            if (status == ConnectionStatus.Disconnected && reason == ConnectionStatusChangeReason.Retry_Expired)
+            {
+                Log.Information("Retry timeout. The RetryHandler will attempt to recover links for a duration of OperationTimeoutInMilliseconds (default 4 minutes).");
+            }
+
+            if (status == ConnectionStatus.Disconnected && reason == ConnectionStatusChangeReason.Bad_Credential)
+            {
+                Log.Information("UnauthorizedException during Retry.");
+                await TryClose();
+                await Initialize();
+            }
+
+            if (status == ConnectionStatus.Disconnected && reason == ConnectionStatusChangeReason.Device_Disabled)
+            {
+                Log.Information("DeviceDisabledException during Retry.");
+                await TryClose();
+                await Initialize();
             }
         }
     }

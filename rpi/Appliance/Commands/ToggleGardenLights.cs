@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using Appliance.Controllers;
+﻿using Appliance.Controllers;
 using Appliance.Models;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Appliance.Commands
 {
-    public class ToggleGardenLightsHandler : AsyncRequestHandler<ToggleGardenLightsCommand, StateResponse>
+    public class ToggleGardenLightsHandler : IRequestHandler<ToggleGardenLightsCommand, StateResponse>
     {
         private readonly ILightsController _lightsController;
 
@@ -14,7 +15,7 @@ namespace Appliance.Commands
             _lightsController = lightsController;
         }
 
-        protected override Task<StateResponse> HandleCore(ToggleGardenLightsCommand request)
+        public Task<StateResponse> Handle(ToggleGardenLightsCommand request, CancellationToken token)
         {
             return Task.FromResult(new StateResponse(_lightsController.GardenLightsToggle()));
         }

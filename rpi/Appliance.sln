@@ -9,9 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solution
 	ProjectSection(SolutionItems) = preProject
 		build.cake = build.cake
 		build.ps1 = build.ps1
+		build.sh = build.sh
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appliance.Tests", "Appliance.Tests\Appliance.Tests.csproj", "{7A316351-2695-40FC-8AC4-E76B0D589F7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appliance.Tests", "Appliance.Tests\Appliance.Tests.csproj", "{7A316351-2695-40FC-8AC4-E76B0D589F7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

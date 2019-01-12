@@ -1,17 +1,17 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Serilog;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Appliance.Commands
 {
     public class RegisterAppForPushNotificationsHandler : IRequestHandler<RegisterAppForPushNotificationsCommand>
     {
-        public Task Handle(RegisterAppForPushNotificationsCommand message, CancellationToken cancellationToken)
+        public Task<Unit> Handle(RegisterAppForPushNotificationsCommand message, CancellationToken cancellationToken)
         {
             // TODO: Register app device for push notification using your preferred method
             Log.Information("Registered app device for push notifications");
-            return Task.CompletedTask;
+            return Unit.Task;
         }
     }
 

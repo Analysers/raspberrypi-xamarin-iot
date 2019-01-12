@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Appliance.Azure;
-using Appliance.Helpers;
+﻿using Appliance.Azure;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Appliance.Commands
 {
@@ -14,7 +14,7 @@ namespace Appliance.Commands
             _azureIoTHub = azureIoTHub;
         }
 
-        protected override Task HandleCore(UpdateReportedPropertyCommand request)
+        protected override Task Handle(UpdateReportedPropertyCommand request, CancellationToken cancellationToken)
         {
             return _azureIoTHub.UpdateReportedProperty(request.Key, request.Value);
         }

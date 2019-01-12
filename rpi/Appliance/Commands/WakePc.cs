@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MediatR;
+using Serilog;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using Serilog;
 
 namespace Appliance.Commands
 {
@@ -15,7 +16,7 @@ namespace Appliance.Commands
     {
         private const string MacAddressOfDestinationPc = "AA:BB:CC:11:22:33";
 
-        protected override async Task HandleCore(WakePcCommand command)
+        protected override async Task Handle(WakePcCommand command, CancellationToken cancellationToken)
         {
             var mac = MacAddressOfDestinationPc.Split(':').Select(x => Convert.ToByte(x, 16)).ToArray();
             var counter = 0;
